@@ -1,0 +1,152 @@
+package userPackage;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author Jamie Gilbertson, Anita Pal
+ */
+import java.util.*;
+
+public class userDetails {
+    private ArrayList<userDetails> friendList;
+    private final int userID;
+    private String username;
+    private String firstName;
+    private String lastName;
+    private String telephoneNo;
+    private String city;
+    private final Date birthday;
+    private Date lastOnline;
+    private final Date creationDate;
+    private int unreadMessages;
+    
+    //constructor used for creating new users
+    public userDetails(String username, String firstName, String lastName, String telephoneNo, String city, Date birthday, int ID){
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.telephoneNo = telephoneNo;
+        this.city = city;
+        this.birthday = birthday;
+        this.creationDate = new Date();
+        this.lastOnline = new Date();
+        this.unreadMessages = 0;
+        this.userID = ID;
+    }
+
+    //complete constructor only used when loading data from disk
+    public userDetails(ArrayList<userDetails> friendList, int userID, String username, String firstName, String lastName, String telephoneNo, String city, Date birthday, Date lastOnline, Date creationDate, int unreadMessages) {
+        this.friendList = friendList;
+        this.userID = userID;
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.telephoneNo = telephoneNo;
+        this.city = city;
+        this.birthday = birthday;
+        this.lastOnline = lastOnline;
+        this.creationDate = creationDate;
+        this.unreadMessages = unreadMessages;
+    }
+    
+    public int getUserID(){
+        return this.userID;
+    }
+    
+    public void setUsername(String newUsername){
+        this.username = newUsername;
+    }
+    
+    public String getUsername(){
+        return this.username;
+    }
+    
+    public void setFirstName(String name){
+        this.firstName = name;
+    }
+    
+    public String getFirstName(){
+        return this.firstName;
+    }
+    
+    public void setLastName(String name){
+        this.lastName = name;
+    }
+    
+    public String getLastName(){
+        return this.lastName;
+    }
+    
+    public void setTelephoneNo(String number){
+        this.telephoneNo = number;
+    }
+    
+    public String getTelephoneNo(){
+        return this.telephoneNo;
+    }
+    
+    public Date getBirthday(){
+        return this.birthday;
+    }
+    
+    public void setCity(String newCity){
+        this.city = newCity;
+    }
+    
+    public String getCity(){
+        return this.city;
+    }
+    
+    public void updateLastOnline(){
+        this.lastOnline = new Date();
+    }
+    
+    public Date getLastOnline(){
+        return lastOnline;
+    }
+    
+    public Date getCreationDate(){
+        return creationDate;
+    }
+    
+    public int getUnreadMessages(){
+        return unreadMessages;
+    }
+    
+    public void setUnreadMessages(int num){
+        this.unreadMessages = num;
+    }
+    
+    public void clearUnreadMessages(){
+        this.unreadMessages = 0;
+    }
+    
+    public void addToFriends(userDetails newFriend){
+        friendList.add(newFriend);
+    }
+    
+    public void removeFromFriends(int ID){
+        userDetails temp;
+        if(friendList.size() > 0){
+            for (int i = 0; i < friendList.size(); i++){
+                temp = friendList.get(i);
+                if(temp.getUserID() == ID){
+                    friendList.remove(i);
+                }
+            }
+        }
+    }
+
+    public ArrayList<userDetails> getFriendList() {
+        return friendList;
+    }
+
+    public void setFriendList(ArrayList<userDetails> friendList) {
+        this.friendList = friendList;
+    }
+}
