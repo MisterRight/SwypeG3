@@ -1,0 +1,16 @@
+Register
+Returns valid userDetails if successful
+Returns failed-state userDetails if username is taken
+
+logIn
+return valid userDetails if successful
+returns failed-state userDetails if password wrong or if user is already logged in
+
+
+server-client messages
+on requested that require returns of user details, a failed-state userDetails instance will be returned with "failed" written into all of the String fields.
+each messages ended with :
+; separates parts
+friend logged in - ID;"Online":
+friend Logged off - ID;"Offline":
+friend accepted friend request - ID;"Accepted"
