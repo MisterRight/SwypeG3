@@ -1,0 +1,46 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package userPackage;
+
+/**
+ *
+ * @author Jamie Gilbertson
+ */
+public class serverUser {
+    private userDetails details;
+    private String password;
+    private boolean onlineStatus;
+    
+    public serverUser( userDetails newDetails, String password){
+        this.details = newDetails;
+        this.password = password;
+        this.onlineStatus = true;
+    }
+
+    public boolean getOnlineStatus() {
+        return onlineStatus;
+    }
+
+    public void setOnlineStatus(boolean onlineStatus) {
+        this.onlineStatus = onlineStatus;
+    }
+    
+    public userDetails getDetails(){
+        return details;
+    }
+    
+    public void setDetails(userDetails newDetails){
+        this.details = newDetails;
+    }
+    
+    public String getPassword(){
+        return password;
+    }
+    
+    public void setPassword(String password){
+        this.password = password;
+    }
+}
