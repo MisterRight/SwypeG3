@@ -1,0 +1,257 @@
+package swypeServer;
+
+import userPackage.*;
+import javax.jws.WebService;
+import javax.jws.WebMethod;
+import java.util.*;
+import java.io.*;
+
+@WebService
+public class swypeServer {
+    
+    private static ArrayList<serverUser> registeredUserList;
+    private static HashMap userMessages = new HashMap();
+    private static String adminPassword = "eggcook31";
+    private static userDetails failedUser = new userDetails("failed", "failed", "failed", "failed", "failed", new Date(0), 0);
+    private static int usercount = 1;
+    
+    
+    @WebMethod
+    public userDetails register(String username, String password, String firstName, String lastName, String telephoneNo, String city, Date birthday){
+        synchronized(registeredUserList){
+            //check if user already exists and return failed-state userDetails if true
+            for (int i = 0; i < registeredUserList.size(); i++){
+                registeredUserList.get(i);
+                if (((registeredUserList.get(i).getDetails()).getUsername()).equals(username)){
+                    return failedUser;
+                }
+            }
+            //create new userDetails and serverUser intances, add serverUser to registeredUserList and return userDetails instance to client
+            userDetails tempDetails = new userDetails(username, firstName, lastName, telephoneNo, city, birthday, usercount++);
+            serverUser tempUser = new serverUser(tempDetails, password);
+            registeredUserList.add(tempUser);
+            userMessages.put(tempUser.getDetails().getUserID(), new messages()); //automatically sets user online status to true
+            return tempDetails;
+            
+            //TODO save to disk
+        }
+    }
+    
+    private void tellFriendsOnline(userDetails tempUser){
+        int tempID = tempUser.getUserID();
+        messages tempMessage;
+        //check user has friends, then iterate through them and send server message informing them of friend online
+        if(tempUser.getFriendList().size() < 0){
+            for(int i = 0; i < tempUser.getFriendList().size(); i++){
+                tempMessage = (messages)userMessages.get(tempUser.getFriendList().get(i).getUserID());
+                tempMessage.setServerMessage(tempMessage.getServerMessage()  + tempID + ";Online"+ ":");
+                userMessages.put(tempID, tempMessage);
+            }
+        }
+    }
+    
+    private void tellFriendsOffline(userDetails tempUser){
+        int tempID = tempUser.getUserID();
+        messages tempMessage;
+        //check user has friends, then iterate through them and send server message informing them of friend online
+        for(int i = 0; i < tempUser.getFriendList().size(); i++){
+            tempMessage = (messages)userMessages.get(tempUser.getFriendList().get(i).getUserID());
+            tempMessage.setServerMessage(tempMessage.getServerMessage()  + tempID + ";Offline"+ ":");
+            userMessages.put(tempID, tempMessage);
+        }
+    }
+    
+    @WebMethod
+    public userDetails logIn(String username, String password){
+        synchronized(registeredUserList){
+            //check if user is already logged in
+            for (int i = 0; i < registeredUserList.size(); i++){
+                if(registeredUserList.get(i).getOnlineStatus()){
+                    if(registeredUserList.get(i).getDetails().getUsername().equals(username)){
+                        return failedUser;
+                    }
+                }
+            }
+            //check password is correct, set their status to offline, update their last online value, and tell their friends
+            serverUser temp;
+            for (int i = 0; i < registeredUserList.size(); i++){
+                temp = registeredUserList.get(i);
+                if ((temp.getPassword()).equals(password)){
+                    temp.getDetails().updateLastOnline();
+                    temp.setOnlineStatus(true);
+                    tellFriendsOnline(temp.getDetails());
+                    return temp.getDetails();
+                }
+            }
+            return failedUser;
+        }
+    }
+    
+    
+    @WebMethod void logout(int userID){
+        synchronized(registeredUserList){
+            //find user, set their status to offline, update their last online value, and tell their friends
+            for (int i = 0; i < registeredUserList.size(); i++){
+                if(registeredUserList.get(i).getDetails().getUserID() == userID){
+                    registeredUserList.get(i).setOnlineStatus(false);
+                    registeredUserList.get(i).getDetails().updateLastOnline();
+                    tellFriendsOffline(registeredUserList.get(i).getDetails());
+                    return;
+                }
+            }
+        }
+    }
+    
+    
+    @WebMethod
+    public userDetails userSearch(String username){
+        synchronized(registeredUserList){
+            userDetails temp;
+            //find user and return their details
+            for (int i = 0; i < registeredUserList.size(); i++){
+                    temp = registeredUserList.get(i).getDetails();
+                    if ((temp.getUsername()).equals(username)){
+                        return temp;
+                    }
+                }
+            //user not found, send failed state user
+            return failedUser;
+        }
+    }
+    
+    
+    @WebMethod
+    public void acceptFriend (int requesteeID, int requesterID){
+        synchronized(registeredUserList){
+            int user1Index = 0, user2Index = 0;
+            boolean user1Found = false, user2Found = false;
+            //find location of both users in registeredUserList
+            for (int i = 0; i < registeredUserList.size(); i++){
+                if (registeredUserList.get(i).getDetails().getUserID() == requesteeID){
+                    user1Index = i;
+                    user1Found = true;
+                    if (user2Found == true){
+                        i = registeredUserList.size(); //if both users have been found, end the loop
+                    }
+                }
+                if (registeredUserList.get(i).getDetails().getUserID() == requesterID){
+                    user2Index = i;
+                    user2Found = true;
+                    if (user2Found == true){
+                        i = registeredUserList.size(); //if both users have been found, end the loop
+                    }
+                }
+            }
+            if (user1Found == true && user2Found == true){
+                //add both users to each other's friend lists
+                registeredUserList.get(user1Index).getDetails().addToFriends(registeredUserList.get(user2Index).getDetails());
+                registeredUserList.get(user2Index).getDetails().addToFriends(registeredUserList.get(user1Index).getDetails());
+                //tell the user who sent the friend request that it has been accepted
+                String tempMessage = requesteeID + ";Accepted";
+                addServerMessage(requesterID, tempMessage);
+            }
+        }
+    }
+    
+    
+    @WebMethod
+    public void addFriend (int requesterID, int requesteeID){
+        addServerMessage(requesteeID, ";FriendRequest");
+    }
+    
+    
+    @WebMethod
+    public void deleteFriend (int deleterID, int deletedID){
+        synchronized(registeredUserList){
+            int user1Index = 0, user2Index = 0;
+            boolean user1Found = false, user2Found = false;
+            //find location of both users in registeredUserList
+            for (int i = 0; i < registeredUserList.size(); i++){
+                if (registeredUserList.get(i).getDetails().getUserID() == deletedID){
+                    user1Index = i;
+                    user1Found = true;
+                    if (user2Found == true){
+                        i = registeredUserList.size(); //if both users have been found, end the loop
+                    }
+                }
+                if (registeredUserList.get(i).getDetails().getUserID() == deleterID){
+                    user2Index = i;
+                    user2Found = true;
+                    if (user2Found == true){
+                        i = registeredUserList.size(); //if both users have been found, end the loop
+                    }
+                }
+            }
+            if (user1Found == true && user2Found == true){
+                //add both users to each other's friend lists
+                registeredUserList.get(user1Index).getDetails().removeFromFriends(registeredUserList.get(user2Index).getDetails().getUserID());
+                registeredUserList.get(user2Index).getDetails().removeFromFriends(registeredUserList.get(user1Index).getDetails().getUserID());
+                //tell the user who sent the friend request that it has been accepted
+                String tempMessage = deletedID + ";Unfriended";
+                addServerMessage(deleterID, tempMessage);
+            }
+        }
+    }
+    
+    
+    @WebMethod
+    public void getTextMessage(int ID){
+    //TODO
+    }
+    
+    
+    @WebMethod
+    public void getImageMessage(int ID){
+    //TODO
+    }
+    
+    
+    @WebMethod
+    public void getHyperlinkMessage(int ID){
+    //TODO
+    }
+    
+    
+    @WebMethod
+    public void getFileMessage(int ID){
+    //TODO
+    }
+    
+    
+    @WebMethod
+    public void getUnsentMessages(int ID){
+    //TODO
+    }
+    
+    
+    @WebMethod
+    public void getConferenceMessages(ArrayList conferences){
+    //TODO
+    }
+    
+    
+    @WebMethod
+    public void startGroup(ArrayList<userDetails> users){
+    //TODO
+    }
+    
+    
+    @WebMethod
+    public void talkText(int sendID, int recID, String message){
+    //TODO
+    }
+    
+    
+    @WebMethod
+    public void talkImage(int sendID, int recID, Byte[] imageByte){
+    //TODO
+    }
+    
+    
+    private void addServerMessage(int userID, String message){
+        messages tempMessage = (messages)userMessages.get(userID);
+        tempMessage.setServerMessage(tempMessage.getServerMessage() + message +":");
+        userMessages.put(userID, tempMessage);
+    }
+    
+}
