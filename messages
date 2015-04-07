@@ -1,0 +1,50 @@
+package swypeServer;
+/**
+ *
+ * @author Jamie Gilbertson
+ */
+public class messages {
+    private String textMessage;
+    private String serverMessage;
+    private Byte[] image;
+    private boolean imageSent;
+
+    public messages() {
+        this.textMessage = "";
+        this.serverMessage = "";
+        this.imageSent = true;
+    }
+
+    public boolean isImageSent() {
+        return imageSent;
+    }
+
+    public void setImageSent(boolean imageSent) {
+        this.imageSent = imageSent;
+    }
+
+    public String getTextMessage() {
+        return textMessage;
+    }
+
+    public void setTextMessage(String textMessage) {
+        this.textMessage = textMessage;
+    }
+
+    public String getServerMessage() {
+        return serverMessage;
+    }
+
+    public void setServerMessage(String serverMessage) {
+        this.serverMessage = serverMessage;
+    }
+
+    public Byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(Byte[] image) {
+        this.image = image;
+        imageSent = true;
+    }
+}
