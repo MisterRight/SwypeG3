@@ -1,5 +1,8 @@
 package swypeServer;
-
+/**
+ *
+ * @author Jamie Gilbertson
+ */
 import userPackage.*;
 import javax.jws.WebService;
 import javax.jws.WebMethod;
@@ -11,8 +14,8 @@ public class swypeServer {
     
     private static ArrayList<serverUser> registeredUserList;
     private static HashMap userMessages = new HashMap();
-    private static String adminPassword = "eggcook31";
-    private static userDetails failedUser = new userDetails("failed", "failed", "failed", "failed", "failed", new Date(0), 0);
+    private static final String adminPassword = "eggcook31";
+    private static final userDetails failedUser = new userDetails("failed", "failed", "failed", "failed", "failed", new Date(0), 0);
     private static int usercount = 1;
     
     
@@ -195,32 +198,49 @@ public class swypeServer {
     
     
     @WebMethod
-    public void getTextMessage(int ID){
-    //TODO
+    public String getTextMessage(int ID){
+    //TODO Track unread messages
+        messages tempMessage = (messages)userMessages.get(ID);
+        String tempString = tempMessage.getTextMessage();
+        //clear message buffer
+        tempMessage.setTextMessage("");
+        userMessages.put(ID, tempMessage);
+        return tempString;
     }
     
     
     @WebMethod
-    public void getImageMessage(int ID){
-    //TODO
+    public Byte[] getImageMessage(int ID){
+    //TODO images will likely be saved to disk, may have to adjust server to load images from disk before sending
+        messages tempMessage = (messages)userMessages.get(ID);
+        if( tempMessage.getImageSent()){
+            Byte[] tempImage = tempMessage.getImage();
+            tempMessage.setImage(new Byte[0]);
+            tempMessage.setImageSent(false);
+            userMessages.put(ID, tempMessage);
+            return tempImage;
+        }
+        return new Byte[0];
     }
     
     
     @WebMethod
     public void getHyperlinkMessage(int ID){
-    //TODO
+    //TODO need to program actually opening hyperlinks from inside a client first
     }
     
     
     @WebMethod
     public void getFileMessage(int ID){
-    //TODO
+    //TODO should be the same as images, not sure yet
     }
     
     
     @WebMethod
-    public void getUnsentMessages(int ID){
+    public int getUnreadMessages(int ID){
     //TODO
+        messages tempMessage = (messages)userMessages.get(ID);
+        return tempMessage.getUnreadMessages();
     }
     
     
@@ -231,20 +251,32 @@ public class swypeServer {
     
     
     @WebMethod
-    public void startGroup(ArrayList<userDetails> users){
+    public void startGroup(ArrayList<userDetails> users, String name){
     //TODO
     }
     
     
     @WebMethod
     public void talkText(int sendID, int recID, String message){
-    //TODO
+    //TODO may require revision, may store messages as arrayList rather than String, or perhaps as a special friend class
+        messages tempMessage = (messages)userMessages.get(recID);
+        tempMessage.setTextMessage("[" + sendID + ":" + tempMessage.getTextMessage() + "]");
+        userMessages.put(recID, tempMessage);
     }
     
     
     @WebMethod
-    public void talkImage(int sendID, int recID, Byte[] imageByte){
-    //TODO
+    public int talkImage(int sendID, int recID, Byte[] imageByte){
+    //TODO may require revision, may store multiple byte arrays in arrayList
+        messages tempMessage = (messages)userMessages.get(recID);
+        if(!tempMessage.getImageSent()){
+            tempMessage.setImage(imageByte);
+            userMessages.put(recID, tempMessage);
+            return 1; //successful
+        }
+        else{
+            return 2; //user not yet received previous image
+        }
     }
     
     
