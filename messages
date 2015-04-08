@@ -4,6 +4,7 @@ package swypeServer;
  * @author Jamie Gilbertson
  */
 public class messages {
+    private int unreadMessages;
     private String textMessage;
     private String serverMessage;
     private Byte[] image;
@@ -15,7 +16,19 @@ public class messages {
         this.imageSent = true;
     }
 
-    public boolean isImageSent() {
+    public int getUnreadMessages() {
+        return unreadMessages;
+    }
+
+    public void setUnreadMessages(int unreadMessages) {
+        this.unreadMessages = unreadMessages;
+    }
+
+    public void incUnreadMessages(){
+        this.unreadMessages++;
+    }
+    
+    public boolean getImageSent() {
         return imageSent;
     }
 
