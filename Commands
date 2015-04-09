@@ -1,0 +1,40 @@
+public class Commands {
+  
+    private String userList;
+    private String messageAllUsers;
+    private String changeMessageOfTheDay;
+    private String lastName;
+    private String listAllAdminUsers;
+    
+    public void setUserList(String newUserList){
+        this.userList = newUserList;
+    }
+    
+    public String getUserList(){
+        return this.userList;
+    }
+    
+    public void setMessageAllUsers(String newMessageAllUsers){
+        this.messageAllUsers = newMessageAllUsers;
+    }
+    
+    public String getMessageAllUsers(){
+        return this.messageAllUsers;
+    }
+    
+    public void setChangeMessageofTheDay(String newChangeMessageOfTheDay){
+        this.changeMessageOfTheDay = newChangeMessageOfTheDay;
+    }
+    
+    public String getChangeMessageOfTheDay(){
+        return this.changeMessageOfTheDay;
+    }
+    
+    public void setListAllAdminUsers(String newListAllAdminUsers){
+        this.listAllAdminUsers = newListAllAdminUsers;
+    }
+    
+    public String getListAllAdminUsers(){
+        return this.listAllAdminUsers;
+    }
+}
