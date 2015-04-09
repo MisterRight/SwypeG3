@@ -1,0 +1,44 @@
+public class PublicAnnouncements {
+  
+    private String messageOfTheDay;
+    private String quoteOfTheDay;
+    private String christmasMessage;
+    private String easterMessage;
+    private String newYearMessage;
+    
+    public void setMessageOfTheDay(String newMessageOfTheDay){
+        this.messageOfTheDay = newMessageOfTheDay;
+    }
+    
+    public String getMessageOfTheDay(){
+        return this.messageOfTheDay;
+    }
+    
+    public void setQuoteOfTheDay(String newQuoteOfTheDay){
+        this.quoteOfTheDay = newQuoteOfTheDay;
+    }
+    
+    public String getQuoteOfTheDay(){
+        return this.quoteOfTheDay;
+    }
+    
+    public void setChristmasMessage(String newChristmasMessage){
+        this.christmasMessage = newChristmasMessage;
+    }
+    
+    public String getChristmasMessage(){
+        return this.christmasMessage;
+    }
+    
+    public void setEasterMessage(String newEasterMessage){
+        this.easterMessage = newEasterMessage;
+    }
+    
+    public String getEasterMessage(){
+        return this.easterMessage;
+    }
+    
+    public void setNewYearMessage(String newNewYearMessage){
+        this.newYearMessage = newNewYearMessage;
+   }
+}
