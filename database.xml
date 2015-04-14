@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+- Swype database structure
+- author : AG
+-->
+
+<pma_xml_export version="1.0" xmlns:pma="http://swype.test">
+    <!--
+    - Structure schemas
+    -->
+    <pma:structure_schemas>
+        <pma:database name="swype" collation="utf8_general_ci" charset="utf8">
+            <pma:table name="interactions">
+                CREATE TABLE `interactions` (
+                  `id` int(11) NOT NULL AUTO_INCREMENT,
+                  `UID` int(11) NOT NULL COMMENT 'Lead',
+                  `friended` int(11) NOT NULL,
+                  `blocked` int(11) NOT NULL,
+                  PRIMARY KEY (`id`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+            </pma:table>
+            <pma:table name="messages">
+                CREATE TABLE `messages` (
+                  `msgID` int(11) NOT NULL AUTO_INCREMENT,
+                  `from` int(11) NOT NULL COMMENT 'Sender UID',
+                  `to` int(11) NOT NULL COMMENT 'Target UID',
+                  `msgType` enum('txt','url','file','img') COLLATE utf8_bin NOT NULL DEFAULT 'txt' COMMENT 'Message Type',
+                  `msg` text COLLATE utf8_bin COMMENT 'Message Text',
+                  `status` enum('new','old','deleted') COLLATE utf8_bin DEFAULT 'new',
+                  `date` datetime DEFAULT CURRENT_TIMESTAMP,
+                  PRIMARY KEY (`msgID`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+            </pma:table>
+            <pma:table name="user">
+                CREATE TABLE `user` (
+                  `uid` int(11) NOT NULL AUTO_INCREMENT,
+                  `UserName` tinytext CHARACTER SET utf8 NOT NULL,
+                  `Password` varchar(222) CHARACTER SET utf8 NOT NULL,
+                  `FirstName` tinytext CHARACTER SET utf8 NOT NULL,
+                  `LastName` tinytext CHARACTER SET utf8 NOT NULL,
+                  `phone` int(11) NOT NULL,
+                  `birthday` date NOT NULL,
+                  `city` tinytext CHARACTER SET utf8 NOT NULL,
+                  `LastLogin` datetime DEFAULT NULL,
+                  `FirstLogin` datetime DEFAULT NULL,
+                  PRIMARY KEY (`uid`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+            </pma:table>
+        </pma:database>
+    </pma:structure_schemas>
+
+    <!--
+    - Database: 'swype'
+    -->
+    <database name="swype">
+        <!-- Table interactions -->
+        <!-- Table messages -->
+        <!-- Table user -->
+    </database>
+</pma_xml_export>
