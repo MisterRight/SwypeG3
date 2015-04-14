@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<swype>
-   <user>
-      <UID>1</UID>
-      <FirstName>Jamie</FirstName>
-      <LastName>G</LastName>
-      <UserName>jaGilbertson</UserName>
-      <phone>123456789</phone>
-      <city>Swansea</city>
-      <birthday>1/1/1900</birthday>
-      <LastLogin />
-      <FirstLogin />
-   </user>
-   <user>
-      <UID>2</UID>
-      <FirstName>Abdullah</FirstName>
-      <LastName>ALZAID</LastName>
-      <UserName>AG</UserName>
-      <phone>123456789</phone>
-      <city>Swansea</city>
-      <birthday>1/1/1900</birthday>
-      <LastLogin />
-      <FirstLogin />
-   </user>
-</swype>
+<Users xmlns="http://swype.test">
+  <User xmlns="" UID="1">
+    <FirstName>Jamie</FirstName>
+    <LastName>G</LastName>
+    <UserName>jaGilbertson</UserName>
+    <city>Swansea</city>
+    <phone>123456</phone>
+    <birthday>1/2/1900</birthday>
+    <LastLogin>2/2/2222</LastLogin>
+    <FirstLogin>3/3/3333</FirstLogin>
+  </User>
+  <User xmlns="" UID="2">
+    <FirstName>ALZAID</FirstName>
+    <LastName>Abdullah</LastName>
+    <UserName>AG</UserName>
+    <city>Swansea</city>
+    <phone>123456</phone>
+    <birthday>1/2/1900</birthday>
+    <LastLogin>2/2/2222</LastLogin>
+    <FirstLogin>3/3/3333</FirstLogin>
+  </User>
+</Users>
+
