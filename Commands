@@ -13,10 +13,10 @@ public class Commands {
     }
     
     public void setMOTD(String newMOTD){
-        this.mOTD = newMOTD;
+        this.MOTD = newMOTD;
     }
     
     public String getMOTD(){
-        return this.mOTD;
+        return this.MOTD;
     }
 }
