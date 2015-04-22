@@ -1,5 +1,5 @@
+*//author @ Anita
 public class PublicAnnouncements {
-  
     private String messageOfTheDay;
     private String quoteOfTheDay;
     private String christmasMessage;
@@ -41,4 +41,8 @@ public class PublicAnnouncements {
     public void setNewYearMessage(String newNewYearMessage){
         this.newYearMessage = newNewYearMessage;
    }
+   
+   public String getNewYearMessage(){
+        return this.newYearMessage;
+    }
 }
